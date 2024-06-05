@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Segmentation Web App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+</head>
+<body class="m-0 p-0 border-box">
+    <div class="container p-5 mx-auto">
+        <div class="flex items-center justify-center">
+            <div class="flex flex-col w-3/4 p-5 border-2 justify-center gap-6 items-center border-black rounded-lg gap-5 bg-opacity-65 " style="box-shadow: 4px 5px 10px 15px darkgray; " >
+                <span>
+                    <h1 style="font-family: 'Times New Roman', Times, serif;" class="text-2xl md:text-3xl lg:text-4xl text-center font-semibold">Brain Tumor Segmentation Prediction</h1>
+                </span>
+                <span>
+                    <input class="p-3 w-72 rounded-lg bg-gray-700 pl-7 text-white tracking-wider" type="file" id="fileInput" accept="image/*">
+                </span>
+                <span>
+                    <button class="p-3 w-40 rounded-lg bg-blue-700 hover:bg-lime-600 transition-all duration-700 ease-in-out text-white tracking-wider" onclick="uploadImage()">Predict</button>
+                </span>
+                 <h2 class="text-3xl font-semibold mt-12">Result:</h2>
+        <div id="result"></div>
+    </div>
+    </div>
+</div>
+
+    <script>
+        function uploadImage() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+            if (!file) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/predict/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                var url = URL.createObjectURL(blob);
+                document.getElementById('result').innerHTML = `<img src="${url}" alt="Tumor Prediction">`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
